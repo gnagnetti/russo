@@ -1,15 +1,20 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { LogOut, Flame, Trophy } from "lucide-react";
+import { LogOut, Flame, Trophy, Layers, PenTool, Compass, Sparkles, Printer } from "lucide-react";
 import { useUser } from "@/context/UserContext";
 import { Avatar } from "./Avatar";
 import { Welcome } from "./Welcome";
 
-const nav = [
+const mainNav = [
   { to: "/", label: "Dashboard" },
   { to: "/pratica", label: "Pratica" },
   { to: "/esame", label: "Simulazione" },
-  { to: "/teoria", label: "Teoria & Prontuario" },
+  { to: "/flashcards", label: "Flashcard SRS", icon: Layers },
+  { to: "/scrittura", label: "Scrittura & Cirillico", icon: PenTool },
+  { to: "/declinatore", label: "Declinatore", icon: Compass },
+  { to: "/accenti", label: "Accenti", icon: Sparkles },
+  { to: "/teoria", label: "Teoria" },
+  { to: "/stampa", label: "Schede PDF", icon: Printer },
   { to: "/statistiche", label: "Statistiche" },
 ] as const;
 
@@ -19,26 +24,48 @@ export function AppShell({ children }: { children: ReactNode }) {
   if (!user) return <Welcome />;
   return (
     <div className="min-h-screen">
-      <header className="border-b bg-card">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-4 px-4 py-3">
-          <Link to="/" className="font-serif text-xl font-semibold text-primary">ТРКИ Master</Link>
-          <nav className="flex flex-wrap gap-1 text-sm">
-            {nav.map((n) => (
-              <Link key={n.to} to={n.to} activeOptions={{ exact: true }} className="rounded-md px-3 py-1.5 text-muted-foreground hover:bg-muted" activeProps={{ className: "bg-accent text-accent-foreground font-medium" }}>
+      <header className="border-b bg-card print:hidden sticky top-0 z-40 backdrop-blur-md bg-card/95">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-2.5">
+          <Link to="/" className="font-serif text-xl font-bold text-primary tracking-tight">ТРКИ Master</Link>
+          
+          <nav className="flex flex-wrap items-center gap-1 text-xs">
+            {mainNav.map((n) => (
+              <Link
+                key={n.to}
+                to={n.to}
+                activeOptions={{ exact: true }}
+                className="rounded-md px-2.5 py-1.5 text-muted-foreground hover:bg-muted font-medium transition-colors"
+                activeProps={{ className: "bg-accent text-accent-foreground font-semibold" }}
+              >
                 {n.label}
               </Link>
             ))}
           </nav>
-          <div className="ml-auto flex items-center gap-3 text-sm">
-            <span className="flex items-center gap-1 text-warning-foreground"><Flame size={16} className="text-warning" />{user.streakDays}</span>
-            <span className="flex items-center gap-1"><Trophy size={16} className="text-primary" />{user.eloRating}</span>
-            <Avatar name={user.avatar} size={14} />
-            <span className="font-medium">{user.username}</span>
-            <button className="btn btn-outline !px-2 !py-1" onClick={() => selectUser(null)} title="Cambia utente"><LogOut size={16} /></button>
+
+          <div className="flex items-center gap-3 text-xs">
+            <span className="flex items-center gap-1 text-warning-foreground font-medium" title="Giorni consecutivi">
+              <Flame size={15} className="text-warning" />
+              {user.streakDays}d
+            </span>
+            <span className="flex items-center gap-1 font-medium" title="Rating Elo">
+              <Trophy size={15} className="text-primary" />
+              {user.eloRating}
+            </span>
+            <div className="hidden sm:flex items-center gap-2 pl-2 border-l">
+              <Avatar name={user.avatar} size={14} />
+              <span className="font-semibold text-foreground">{user.username}</span>
+            </div>
+            <button
+              className="btn btn-outline !px-2 !py-1 text-xs"
+              onClick={() => selectUser(null)}
+              title="Cambia utente"
+            >
+              <LogOut size={14} />
+            </button>
           </div>
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
+      <main className="mx-auto max-w-7xl px-4 py-8">{children}</main>
     </div>
   );
 }

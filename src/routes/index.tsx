@@ -1,5 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Target, GraduationCap, Award, Lock, BookOpen, Sparkles, CheckCircle2 } from "lucide-react";
+import {
+  Target,
+  GraduationCap,
+  Award,
+  Lock,
+  BookOpen,
+  Sparkles,
+  CheckCircle2,
+  Layers,
+  PenTool,
+  Compass,
+  Printer,
+  Volume2,
+} from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { useUser } from "@/context/UserContext";
 import { BADGES } from "@/lib/badges";
@@ -10,7 +23,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "ТРКИ Master — Preparazione esami di russo TORFL" },
-      { name: "description", content: "Esercitati e simula gli esami ТРКИ / TORFL di lingua russa dal livello A1 al C1, tutto nel browser." },
+      { name: "description", content: "Esercitati e simula gli esami ТРКИ / TORFL di lingua russa dal livello A1 al C1, tutto nel browser senza API key." },
       { property: "og:title", content: "ТРКИ Master — Preparazione esami di russo TORFL" },
       { property: "og:description", content: "Pratica e simulazioni ТРКИ A1–C1 con statistiche locali." },
     ],
@@ -24,9 +37,6 @@ function Dashboard() {
 
   const totalQuestions = QUESTIONS.length;
   const attemptedItems = Object.keys(user.itemHistory).length;
-  const correctItems = Object.values(user.itemHistory).filter(
-    (history) => history.length > 0 && history[history.length - 1].isCorrect
-  ).length;
 
   return (
     <div className="space-y-8">
@@ -54,30 +64,14 @@ function Dashboard() {
         ))}
       </div>
 
-      {/* Banner Nuova Sezione Teoria & Prontuario */}
-      <div className="panel p-6 bg-gradient-to-r from-card via-card to-accent/20 border-primary/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <Sparkles size={18} className="text-primary" />
-            <h2 className="text-lg font-semibold">Nuovo: Teoria & Prontuario Ufficiale B2–C1</h2>
-          </div>
-          <p className="text-xs text-muted-foreground max-w-xl">
-            Consulta le tabelle di reggenza verbale, le regole sottili delle coppie aspettuali (СВ / НСВ), il dizionario dei paronimi e i modelli di lettere per la prova di scrittura.
-          </p>
-        </div>
-        <Link to="/teoria" className="btn btn-primary text-xs shrink-0">
-          <BookOpen size={15} />
-          Apri Prontuario
-        </Link>
-      </div>
-
+      {/* Main Core Modes */}
       <div className="grid gap-4 md:grid-cols-2">
         <Link to="/pratica" className="panel flex gap-4 p-6 hover:border-primary transition-all">
           <Target className="text-primary shrink-0" size={28} />
           <div>
             <h2 className="text-xl font-semibold">Pratica guidata</h2>
             <p className="text-sm text-muted-foreground mt-1">
-              Esercizi per categoria (Grammatica, Lessico, Lettura, Dialoghi, Scrittura) con spiegazioni immediate.
+              Esercizi per categoria (Grammatica, Lessico, Lettura, Dialoghi, Scrittura) con spiegazioni diagnostiche immediate.
             </p>
           </div>
         </Link>
@@ -91,6 +85,82 @@ function Dashboard() {
           </div>
         </Link>
       </div>
+
+      {/* Nuovi Strumenti di Studio Avanzati */}
+      <section className="space-y-3">
+        <div className="flex items-baseline justify-between">
+          <h2 className="text-xl font-semibold">Laboratori Didattici & Nuovi Strumenti</h2>
+          <span className="text-xs text-muted-foreground">Funziona offline · Zero API Key</span>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-3">
+          <Link to="/flashcards" className="panel p-5 hover:border-primary transition-all space-y-2 group">
+            <div className="flex items-center justify-between">
+              <Layers size={22} className="text-primary group-hover:scale-110 transition-transform" />
+              <span className="badge badge-outline text-[10px]">Metodo Leitner</span>
+            </div>
+            <h3 className="font-semibold text-base text-foreground">Flashcard SRS</h3>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Memorizzazione a 5 scatole con pronuncia audio russa, esempi e note grammaticali.
+            </p>
+          </Link>
+
+          <Link to="/scrittura" className="panel p-5 hover:border-primary transition-all space-y-2 group">
+            <div className="flex items-center justify-between">
+              <PenTool size={22} className="text-primary group-hover:scale-110 transition-transform" />
+              <span className="badge badge-outline text-[10px]">Tastiera Cirillica</span>
+            </div>
+            <h3 className="font-semibold text-base text-foreground">Scrittura & Dettati</h3>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Dettati ortografici e flessioni attive con tastiera a schermo fonetica (ЯВЕРТЫ) o standard.
+            </p>
+          </Link>
+
+          <Link to="/declinatore" className="panel p-5 hover:border-primary transition-all space-y-2 group">
+            <div className="flex items-center justify-between">
+              <Compass size={22} className="text-primary group-hover:scale-110 transition-transform" />
+              <span className="badge badge-outline text-[10px]">Tabelle dei 6 Casi</span>
+            </div>
+            <h3 className="font-semibold text-base text-foreground">Declinatore & Coniugatore</h3>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Paradigmi flessivi completi, guida al Genitivo Plurale e matrice dei Verbi di Moto.
+            </p>
+          </Link>
+
+          <Link to="/accenti" className="panel p-5 hover:border-primary transition-all space-y-2 group">
+            <div className="flex items-center justify-between">
+              <Sparkles size={22} className="text-primary group-hover:scale-110 transition-transform" />
+              <span className="badge badge-outline text-[10px]">Ударение</span>
+            </div>
+            <h3 className="font-semibold text-base text-foreground">Accenti & Paronimi</h3>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Indovina la sillaba tonica e confronta coppie di omografi che cambiano significato (es. му́ка vs мука́).
+            </p>
+          </Link>
+
+          <Link to="/teoria" className="panel p-5 hover:border-primary transition-all space-y-2 group">
+            <div className="flex items-center justify-between">
+              <BookOpen size={22} className="text-primary group-hover:scale-110 transition-transform" />
+              <span className="badge badge-outline text-[10px]">B2–C1 Ufficiale</span>
+            </div>
+            <h3 className="font-semibold text-base text-foreground">Teoria & Prontuario</h3>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Reggenze verbali, coppie aspettuali sottili, connettivi formali e modelli di lettere.
+            </p>
+          </Link>
+
+          <Link to="/stampa" className="panel p-5 hover:border-primary transition-all space-y-2 group">
+            <div className="flex items-center justify-between">
+              <Printer size={22} className="text-primary group-hover:scale-110 transition-transform" />
+              <span className="badge badge-outline text-[10px]">Stampa A4 / PDF</span>
+            </div>
+            <h3 className="font-semibold text-base text-foreground">Schede PDF Stampabili</h3>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Genera cheat-sheet pronte per la stampa e simulazioni d'esame cartacee con correzioni staccabili.
+            </p>
+          </Link>
+        </div>
+      </section>
 
       <section>
         <div className="flex items-baseline justify-between">

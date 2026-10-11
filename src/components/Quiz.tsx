@@ -15,6 +15,7 @@ import { CATEGORY_LABEL } from "@/lib/types";
 import { BADGES } from "@/lib/badges";
 import { useUser } from "@/context/UserContext";
 import { explainWrongAnswer } from "@/lib/wrong-answer-explainer";
+import { SpeakButton } from "@/components/SpeakButton";
 
 interface Props {
   testId: string;
@@ -265,9 +266,12 @@ export function Quiz({
                         <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">
                           Quesito {k + 1} · {x.level} · {CATEGORY_LABEL[x.category]}
                         </div>
-                        <span className="font-medium text-base text-foreground leading-snug">
-                          {x.prompt}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-base text-foreground leading-snug">
+                            {x.prompt}
+                          </span>
+                          <SpeakButton text={x.prompt} size={15} />
+                        </div>
                       </div>
                     </div>
                     <span
@@ -424,7 +428,10 @@ export function Quiz({
           </div>
         )}
 
-        <p className="text-lg font-medium text-foreground">{q.prompt}</p>
+        <div className="flex items-start justify-between gap-3">
+          <p className="text-lg font-medium text-foreground">{q.prompt}</p>
+          <SpeakButton text={q.prompt} size={18} showSlowToggle />
+        </div>
 
         <div className="grid gap-2.5">
           {q.options.map((o, k) => {
