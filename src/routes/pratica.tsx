@@ -87,9 +87,28 @@ function Practice() {
       <p className="mt-6 text-sm text-muted-foreground">
         {pool.length} domande disponibili in questa selezione · l'algoritmo dà priorità agli errori recenti.
       </p>
-      <button className="btn btn-primary mt-6 w-full sm:w-auto" disabled={!pool.length} onClick={start}>
-        Inizia sessione di pratica
-      </button>
+      <div className="mt-6 flex flex-wrap gap-3">
+        <button className="btn btn-primary w-full sm:w-auto" disabled={!pool.length} onClick={start}>
+          Inizia sessione di pratica
+        </button>
+
+        {(() => {
+          const hist = user?.itemHistory ?? {};
+          const wrongIds = Object.entries(hist)
+            .filter(([_, attempts]) => attempts.length > 0 && !attempts[attempts.length - 1]!.isCorrect)
+            .map(([id]) => id);
+          const wrongQuestions = QUESTIONS.filter((q) => wrongIds.includes(q.id));
+          if (!wrongQuestions.length) return null;
+          return (
+            <button
+              className="btn btn-outline border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground w-full sm:w-auto flex items-center justify-center gap-2"
+              onClick={() => setRun(shuffle(wrongQuestions).slice(0, 20))}
+            >
+              🎯 Allenati sui tuoi {wrongQuestions.length} errori recenti
+            </button>
+          );
+        })()}
+      </div>
     </div>
   );
 }

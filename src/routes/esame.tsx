@@ -24,11 +24,13 @@ interface ActiveExam {
   title: string;
   questions: Question[];
   timeLimit: number;
+  instantFeedback?: boolean;
 }
 
 function Exam() {
   const { user } = useUser();
   const [activeExam, setActiveExam] = useState<ActiveExam | null>(null);
+  const [tutorMode, setTutorMode] = useState<boolean>(true);
 
   const startLevelExam = (l: Level) => {
     const pool = QUESTIONS.filter((q) => q.level === l);
@@ -38,6 +40,7 @@ function Exam() {
       title: `Simulazione Ufficiale ТРКИ (${l})`,
       questions: qs,
       timeLimit: qs.length * 60,
+      instantFeedback: tutorMode,
     });
   };
 
@@ -50,6 +53,7 @@ function Exam() {
         title: "Субтест 1: Лексика и Грамматика (ТРКИ-2 / B2)",
         questions: qs,
         timeLimit: 50 * 60, // 50 min
+        instantFeedback: tutorMode,
       });
     } else if (type === "c1-full") {
       const pool = QUESTIONS.filter((q) => q.level === "C1" && (q.category === "grammar" || q.category === "lexicon"));
@@ -59,6 +63,7 @@ function Exam() {
         title: "Субтест 1: Лексика и Грамматика (ТРКИ-3 / C1)",
         questions: qs,
         timeLimit: 50 * 60,
+        instantFeedback: tutorMode,
       });
     } else if (type === "reading-b2c1") {
       const pool = QUESTIONS.filter((q) => q.category === "reading");
@@ -68,6 +73,7 @@ function Exam() {
         title: "Субтест 2: Чтение (B2–C1)",
         questions: qs,
         timeLimit: 45 * 60, // 45 min
+        instantFeedback: tutorMode,
       });
     } else if (type === "audio-b2c1") {
       const pool = QUESTIONS.filter((q) => q.category === "audio");
@@ -77,6 +83,7 @@ function Exam() {
         title: "Субтест 3: Аудирование и диалоги (B2–C1)",
         questions: qs,
         timeLimit: 30 * 60,
+        instantFeedback: tutorMode,
       });
     }
   };
@@ -89,7 +96,7 @@ function Exam() {
         questions={activeExam.questions}
         passMark={66}
         timeLimit={activeExam.timeLimit}
-        feedback={false}
+        feedback={activeExam.instantFeedback ?? false}
         onExit={() => setActiveExam(null)}
       />
     );
@@ -100,15 +107,26 @@ function Exam() {
       <div>
         <h1 className="text-3xl font-semibold">Simulazione d'esame ТРКИ / TORFL</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Modalità d'esame rigorosa: nessun riscontro durante la prova, cronometro attivo e calcolo punteggio secondo gli standard del Ministero dell'Istruzione Russo.
+          Simulazioni cronometrate calibrate secondo i parametri ufficiali dei certificati ministeriali russi.
         </p>
       </div>
 
-      <div className="flex items-center gap-2 rounded-md border border-warning/40 bg-warning/15 p-4 text-sm text-foreground">
-        <AlertTriangle size={18} className="shrink-0 text-warning" />
-        <div>
-          <strong>Regole d'esame:</strong> 1 minuto a domanda, soglia di superamento al <strong>66%</strong>. Le risposte corrette e le spiegazioni saranno consultabili al termine del test.
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-md border border-warning/40 bg-warning/15 p-4 text-sm text-foreground">
+        <div className="flex items-center gap-2">
+          <AlertTriangle size={18} className="shrink-0 text-warning" />
+          <div>
+            <strong>Regole d'esame:</strong> 1 minuto a domanda, soglia superamento al <strong>66%</strong>.
+          </div>
         </div>
+        <label className="flex items-center gap-2 cursor-pointer bg-background/80 px-3 py-1.5 rounded border border-warning/30 font-medium text-xs">
+          <input
+            type="checkbox"
+            checked={tutorMode}
+            onChange={(e) => setTutorMode(e.target.checked)}
+            className="rounded text-primary"
+          />
+          <span>Spiega subito gli errori (Modalità Tutor)</span>
+        </label>
       </div>
 
       {/* 1. Prove Generali per Livello */}

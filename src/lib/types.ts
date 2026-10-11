@@ -23,10 +23,11 @@ export interface Question {
   options: string[];
   answer: number;
   explanation: string;
+  wrongExplanations?: Record<number, string>;
 }
 
 export interface TestResult { bestScore: number; lastScore: number; passed: boolean; attempts: number }
-export interface ItemAttempt { isCorrect: boolean; category: string; level: string; timestamp: number }
+export interface ItemAttempt { isCorrect: boolean; category: string; level: string; timestamp: number; chosenAnswer?: number }
 
 export interface UserProfile {
   id: string;
