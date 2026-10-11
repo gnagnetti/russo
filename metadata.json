@@ -1,0 +1,6 @@
+{
+  "name": "ТРКИ Master",
+  "description": "Applicazione completa e offline per la preparazione e simulazione degli esami di certificazione di lingua russa ТРКИ / TORFL (livelli A1, A2, B1, B2, C1).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
